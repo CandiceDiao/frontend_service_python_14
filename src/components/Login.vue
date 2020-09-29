@@ -19,6 +19,7 @@
               </v-toolbar>
               <v-card-text>
                 <v-form>
+                  <!--v-model 将login文本输入框v-text-field 和username变量进行关联-->
                   <v-text-field
                     v-model="username"
                     label="Login"
@@ -57,11 +58,20 @@ export default {
   props: {
     source: String,
   },
+  data(){
+    return{
+      username:"candice",
+      password:""
+    }
+  },
   methods: {
     login: function () {
+      //打印变量
       console.log(this);
       console.log(this.username);
       console.log(this.password);
+      //发起post请求
+      //.then输出请求返回
       http
         .post("/login", {
           username: this.username,
@@ -69,11 +79,13 @@ export default {
         })
         .then((res) => {
           console.log(res);
+          //收到请求之后进行判断；进行页面跳转
           if (res.data.errcode === 0) {
             //如果errcode=0 就把正确结果的token保存到localStorage中
             localStorage.setItem("token", res.data.token);
             console.log(localStorage.getItem("token"));
-            this.$router.push("demo");
+            //登录成功后跳转到dashbord页面
+            this.$router.push("/dashboard");
           } else {
             //alert error
             window.alert("username or passowrd error");
